@@ -82,3 +82,20 @@ def update_note(note_id):
         response["status"] = 'Note not found'
 
     return json.dumps(response)
+
+
+@app.route('/notes/<int:note_id>', methods=('DELETE',))
+def delete_note(note_id):
+    notesDB = get_notesdb()
+    note = notesDB.getNoteById(note_id)
+
+    response = {}
+
+    if note is not None:     
+        notesDB.deleteNoteById(note_id)
+
+        response["status"] = 'OK'
+    else:
+        response["status"] = 'Note not found'
+
+    return json.dumps(response)
