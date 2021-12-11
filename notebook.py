@@ -57,5 +57,28 @@ def create_note():
     response["status"] = 'OK'
     response["note_id"] = note.getID()
 
+    return json.dumps(response)
+
+
+@app.route('/notes/<int:note_id>', methods=('PUT',))
+def update_note(note_id):
+    notesDB = get_notesdb()
+    note = notesDB.getNoteById(note_id)
+
+    response = {}
+
+    if note is not None:
+        print(request.values)
+        title = request.values.get('title', note.getTitle())
+        text = request.values.get('text', note.getText())
+        
+        note.setTitle(title)
+        note.setText(text)
+        notesDB.updateNote(note)
+
+        response["status"] = 'OK'
+        response["note_id"] = note.getID()
+    else:
+        response["status"] = 'Note not found'
 
     return json.dumps(response)
